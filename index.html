@@ -653,20 +653,27 @@
             </div>
         </div>
     </div>
+
+    <div class="cursor"></div>
     <div class="cursor-trail"></div>
+
+    <div class="scene-container" id="scene-container"></div>
     <div class="visualizer-container">
         <div class="visualizer-reflection"></div>
     </div>
-    <audio id="backgroundMusic" loop>
+
+    <audio id="background-music" loop crossorigin="anonymous">
         <source src="Space Cadet-yt.savetube.me.mp3" type="audio/mpeg">
     </audio>
+
     <div class="music-controls">
         <button id="playPauseBtn">Play Music</button>
         <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5">
     </div>
+
     <div class="content">
-        <div class="background-text">FUNGI</div>
         <section class="section" id="intro">
+            <div class="section-visualizer"></div>
             <span class="section-title">Welcome</span>
             <img src="image.png" alt="Aman Gangwar" class="profile-image">
             <h1>Hi, I'm Aman Gangwar</h1>
@@ -678,6 +685,7 @@
         </section>
 
         <section class="section" id="about">
+            <div class="section-visualizer"></div>
             <span class="section-title">About Me</span>
             <h1>My Journey</h1>
             <p>Currently pursuing B.Tech in Computer Science at Bennett University, I combine technical expertise with creative problem-solving to build innovative digital solutions.</p>
@@ -693,7 +701,56 @@
             </div>
         </section>
 
+        <section class="section" id="designs">
+            <div class="section-visualizer"></div>
+            <span class="section-title">My Designs</span>
+            <h1>Design Gallery</h1>
+            <div class="carousel-container">
+                <div class="carousel carousel-top">
+                    <div class="carousel-item">
+                        <img src="designs/_wallpaper upscales (3).png" alt="Upscaled Wallpaper Design 3">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="designs/_       _.jpg" alt="Design">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="designs/ULTIMA WALLPAPER.png" alt="Ultima Wallpaper">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="designs/_wallpaper upscales (3).png" alt="Upscaled Wallpaper Design 3">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="designs/_       _.jpg" alt="Design">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="designs/ULTIMA WALLPAPER.png" alt="Ultima Wallpaper">
+                    </div>
+                </div>
+                <div class="carousel carousel-bottom">
+                    <div class="carousel-item">
+                        <img src="designs/_wallpaper upscales (1).png" alt="Upscaled Wallpaper Design 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="designs/_wallpaper upscales.png" alt="Upscaled Wallpaper">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="designs/ULTIMA WALLPAPER.png" alt="Ultima Wallpaper 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="designs/_wallpaper upscales (1).png" alt="Upscaled Wallpaper Design 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="designs/_wallpaper upscales.png" alt="Upscaled Wallpaper">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="designs/ULTIMA WALLPAPER.png" alt="Ultima Wallpaper 2">
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="section" id="skills">
+            <div class="section-visualizer"></div>
             <span class="section-title">Skills</span>
             <h1>My Expertise</h1>
             <div class="skills-container">
@@ -730,6 +787,7 @@
         </section>
 
         <section class="section" id="contact">
+            <div class="section-visualizer"></div>
             <span class="section-title">Get in Touch</span>
             <h1>Contact Me</h1>
             <p>Let's work together! Reach out to me through:</p>
@@ -743,146 +801,68 @@
     <div class="nav-dots">
         <div class="nav-dot" data-section="intro"></div>
         <div class="nav-dot" data-section="about"></div>
+        <div class="nav-dot" data-section="designs"></div>
         <div class="nav-dot" data-section="skills"></div>
         <div class="nav-dot" data-section="contact"></div>
     </div>
 
-    <script type="module" src="script.js"></script>
+    <script type="module" src="main.js"></script>
     <script>
         // Cursor trail animation
-        const cursor = document.querySelector('.cursor-trail');
-        let mouseX = 0;
-        let mouseY = 0;
-        let cursorX = 0;
-        let cursorY = 0;
-        let trailPoints = [];
-        const maxTrailPoints = 20;
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.querySelector('.cursor');
+            const cursorTrail = document.querySelector('.cursor-trail');
+            let mouseX = 0;
+            let mouseY = 0;
+            let trailX = 0;
+            let trailY = 0;
+            let isAnimating = false;
 
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            cursor.classList.add('active');
-            
-            // Add new point to trail
-            trailPoints.push({ x: mouseX, y: mouseY });
-            if (trailPoints.length > maxTrailPoints) {
-                trailPoints.shift();
+            function animate() {
+                if (!isAnimating) return;
+
+                const diffX = mouseX - trailX;
+                const diffY = mouseY - trailY;
+
+                trailX += diffX * 0.1;
+                trailY += diffY * 0.1;
+
+                cursorTrail.style.transform = `translate(${trailX}px, ${trailY}px)`;
+
+                requestAnimationFrame(animate);
             }
-        });
 
-        function animateCursor() {
-            cursorX += (mouseX - cursorX) * 0.1;
-            cursorY += (mouseY - cursorY) * 0.1;
-            
-            cursor.style.left = cursorX + 'px';
-            cursor.style.top = cursorY + 'px';
-            
-            // Update trail points
-            trailPoints.forEach((point, index) => {
-                const trailElement = document.querySelector(`.trail-point-${index}`) || createTrailPoint(index);
-                const opacity = index / maxTrailPoints;
-                trailElement.style.left = point.x + 'px';
-                trailElement.style.top = point.y + 'px';
-                trailElement.style.opacity = opacity;
-            });
-            
-            requestAnimationFrame(animateCursor);
-        }
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
 
-        function createTrailPoint(index) {
-            const point = document.createElement('div');
-            point.className = `cursor-trail trail-point-${index}`;
-            document.body.appendChild(point);
-            return point;
-        }
+                cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
 
-        animateCursor();
-
-        // Reset cursor opacity when mouse stops moving
-        let mouseMoveTimeout;
-        document.addEventListener('mousemove', () => {
-            clearTimeout(mouseMoveTimeout);
-            mouseMoveTimeout = setTimeout(() => {
-                cursor.classList.remove('active');
-                trailPoints = [];
-                document.querySelectorAll('.cursor-trail:not(:first-child)').forEach(el => el.remove());
-            }, 100);
-        });
-
-        // Loading screen with 3-second duration and auto-play music
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loadingScreen = document.querySelector('.loading-screen');
-                loadingScreen.classList.add('hidden');
-                
-                // Auto-play music when loading completes
-                const audio = document.getElementById('backgroundMusic');
-                const playPauseBtn = document.getElementById('playPauseBtn');
-                audio.play();
-                if (!audioContext) initAudio();
-                visualize();
-                playPauseBtn.textContent = 'Pause Music';
-            }, 3000); // 3 seconds delay
-        });
-
-        // Audio Visualizer
-        const audio = document.getElementById('backgroundMusic');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const volumeControl = document.getElementById('volumeControl');
-        const visualizerContainer = document.querySelector('.visualizer-container');
-        const numBars = 50;
-        let audioContext;
-        let analyser;
-        let dataArray;
-        let animationId;
-
-        // Create visualizer bars
-        for (let i = 0; i < numBars; i++) {
-            const bar = document.createElement('div');
-            bar.className = 'visualizer-bar';
-            visualizerContainer.appendChild(bar);
-        }
-
-        function initAudio() {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            analyser = audioContext.createAnalyser();
-            const source = audioContext.createMediaElementSource(audio);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-            analyser.fftSize = 256;
-            dataArray = new Uint8Array(analyser.frequencyBinCount);
-        }
-
-        function visualize() {
-            analyser.getByteFrequencyData(dataArray);
-            const bars = document.querySelectorAll('.visualizer-bar');
-            const step = Math.floor(dataArray.length / numBars);
-
-            bars.forEach((bar, i) => {
-                const value = dataArray[i * step] / 255;
-                const height = value * 150;
-                bar.style.height = `${height}px`;
-                bar.style.opacity = value;
+                if (!isAnimating) {
+                    isAnimating = true;
+                    animate();
+                }
             });
 
-            animationId = requestAnimationFrame(visualize);
-        }
+            // Auto-play music when loading completes
+            const audio = document.getElementById('background-music');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            audio.play();
 
-        playPauseBtn.addEventListener('click', () => {
-            if (audio.paused) {
-                audio.play();
-                if (!audioContext) initAudio();
-                visualize();
-                playPauseBtn.textContent = 'Pause Music';
-            } else {
-                audio.pause();
-                cancelAnimationFrame(animationId);
-                playPauseBtn.textContent = 'Play Music';
-            }
-        });
+            // Music controls
+            playPauseBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play();
+                    playPauseBtn.textContent = 'Pause Music';
+                } else {
+                    audio.pause();
+                    playPauseBtn.textContent = 'Play Music';
+                }
+            });
 
-        volumeControl.addEventListener('input', (e) => {
-            audio.volume = e.target.value;
+            document.getElementById('volumeControl').addEventListener('input', (e) => {
+                audio.volume = e.target.value;
+            });
         });
     </script>
 </body>

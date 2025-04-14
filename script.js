@@ -57,7 +57,7 @@ controls.maxPolarAngle = Math.PI / 2;
 controls.minDistance = 3;
 controls.maxDistance = 10;
 controls.autoRotate = true;
-controls.autoRotateSpeed = 1;
+controls.autoRotateSpeed = 0.1;
 
 // Handle Resize
 window.addEventListener('resize', onWindowResize, false);
@@ -101,7 +101,7 @@ function animate() {
     requestAnimationFrame(animate);
     
     if (model) {
-        model.rotation.y += 0.005;
+        model.rotation.y += 0.001;
     }
     
     controls.update();
