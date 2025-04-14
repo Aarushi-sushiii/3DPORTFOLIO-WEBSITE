@@ -20,7 +20,6 @@
             height: 100vh;
             overflow-y: auto;
             cursor: none; /* Hide default cursor */
-            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         /* Mobile warning styles */
@@ -168,8 +167,6 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 0, 0, 0.1);
             position: relative;
-            scroll-margin-top: 2rem;
-            transition: background-color 0.5s ease, border-color 0.5s ease;
         }
 
         .fungi-text {
@@ -190,10 +187,6 @@
             text-shadow: 0 0 20px rgba(255, 0, 0, 0.8),
                         0 0 30px rgba(255, 0, 0, 0.6),
                         0 0 40px rgba(255, 0, 0, 0.4);
-        }
-
-        h1, p, .section-title, .music-player-title, .music-player-artist, .journey-details, .skill-list li, .social-link {
-            transition: color 0.5s ease;
         }
 
         h1 {
@@ -333,8 +326,6 @@
         .nav-dot.active {
             opacity: 1;
             transform: scale(1.2);
-            background: #ff0000;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
         }
 
         .loading-screen {
@@ -696,7 +687,7 @@
 
         @font-face {
             font-family: 'Horizon';
-            src: url('assets/Horizon.otf') format('opentype');
+            src: url('Horizon.otf') format('opentype');
         }
 
         .background-text {
@@ -738,9 +729,10 @@
             height: 200px;
             border-radius: 50%;
             object-fit: cover;
+            margin: 0 auto 2rem;
             border: 3px solid #ff0000;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-            background-image: url('assets/image.png');
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .profile-image:hover {
@@ -1295,7 +1287,7 @@
 </head>
 <body>
     <div class="mobile-warning">
-        <img src="assets/image.png" alt="Aman Gangwar" class="profile-image">
+        <img src="image.png" alt="Aman Gangwar" class="profile-image">
         <h2 class="greeting">Hi there, my name is</h2>
         <h1 class="name">AMAN GANGWAR</h1>
         <p class="description">Innovative Computer Science student with a strong foundation in full-stack development and UI/UX design.</p>
@@ -1333,7 +1325,7 @@
     <div class="content">
         <section id="home" class="section">
             <h2 class="welcome-text">WELCOME</h2>
-            <img src="assets/image.png" alt="Aman Gangwar" class="profile-image">
+            <img src="image.png" alt="Aman Gangwar" class="profile-image">
             <div class="text-content">
                 <h1 class="name-text">HI, I'M<br>AMAN GANGWAR</h1>
                 <p class="description-text">Innovative Computer Science student with a strong foundation in full-stack development and UI/UX design. Passionate about creating user-centric digital solutions and leading collaborative tech initiatives.</p>
@@ -1592,7 +1584,7 @@
     </div>
 
     <audio id="background-music" loop autoplay>
-        <source src="assets/Space Cadet-yt.savetube.me.mp3" type="audio/mpeg">
+        <source src="Space Cadet-yt.savetube.me.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
