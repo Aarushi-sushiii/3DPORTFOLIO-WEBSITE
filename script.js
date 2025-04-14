@@ -68,32 +68,68 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-// Smooth Scrolling
-const sections = document.querySelectorAll('.section');
-const navDots = document.querySelectorAll('.nav-dot');
+// Smooth Scrolling and Navigation
+document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('.section');
+    const navDots = document.querySelectorAll('.nav-dot');
+    let currentSection = 0;
+    let isScrolling = false;
 
-navDots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-        sections[index].scrollIntoView({ behavior: 'smooth' });
+    // Update active section on scroll
+    function updateActiveSection() {
+        const scrollPosition = window.pageYOffset;
+        
+        sections.forEach((section, index) => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            
+            if (scrollPosition >= sectionTop - window.innerHeight / 2 &&
+                scrollPosition < sectionTop + sectionHeight - window.innerHeight / 2) {
+                currentSection = index;
+                updateNavDots(index);
+            }
+        });
+    }
+
+    // Update navigation dots
+    function updateNavDots(activeIndex) {
+        navDots.forEach((dot, index) => {
+            if (index === activeIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+
+    // Handle dot navigation clicks
+    navDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            if (!isScrolling) {
+                isScrolling = true;
+                currentSection = index;
+                updateNavDots(index);
+                
+                sections[index].scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 1000);
+            }
+        });
     });
-});
 
-// Update camera position based on scroll
-let currentSection = 0;
-window.addEventListener('scroll', () => {
-    const scrollPosition = window.scrollY;
-    sections.forEach((section, index) => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-        if (scrollPosition >= sectionTop - window.innerHeight / 2 && 
-            scrollPosition < sectionTop + sectionHeight - window.innerHeight / 2) {
-            currentSection = index;
-            navDots.forEach((dot, i) => {
-                dot.style.transform = i === currentSection ? 'scale(1.5)' : 'scale(1)';
-                dot.style.opacity = i === currentSection ? '1' : '0.5';
-            });
+    // Handle scroll events
+    window.addEventListener('scroll', () => {
+        if (!isScrolling) {
+            updateActiveSection();
         }
     });
+
+    // Initialize first section as active
+    updateNavDots(0);
 });
 
 // Animation
@@ -123,4 +159,71 @@ window.addEventListener('load', () => {
             console.log('Auto-play prevented:', error);
         });
     }, 3000); // Adjust timing to match your loading screen animation
+});
+
+// Cursor Trail Effect
+class CursorTrail {
+    constructor() {
+        this.circles = [];
+        this.mouseX = 0;
+        this.mouseY = 0;
+        this.positions = [];
+        this.maxCircles = 10;
+        this.init();
+    }
+
+    init() {
+        for (let i = 0; i < this.maxCircles; i++) {
+            const circle = document.createElement('div');
+            circle.className = 'cursor-circle';
+            circle.style.opacity = 1 - (i * 0.1);
+            circle.style.transform = `translate(-50%, -50%) scale(${1 - (i * 0.1)})`;
+            document.body.appendChild(circle);
+            this.circles.push(circle);
+            this.positions.push({ x: 0, y: 0 });
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            this.mouseX = e.clientX;
+            this.mouseY = e.clientY;
+        });
+
+        this.animate();
+    }
+
+    animate() {
+        this.positions.unshift({ x: this.mouseX, y: this.mouseY });
+        if (this.positions.length > this.maxCircles) {
+            this.positions.pop();
+        }
+
+        this.circles.forEach((circle, index) => {
+            const pos = this.positions[index] || this.positions[this.positions.length - 1];
+            circle.style.left = pos.x + 'px';
+            circle.style.top = pos.y + 'px';
+        });
+
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// Initialize cursor trail
+new CursorTrail();
+
+// Music Controls
+const audio = document.getElementById('background-music');
+const playPauseBtn = document.getElementById('playPauseBtn');
+
+playPauseBtn.addEventListener('click', () => {
+    if (audio.paused) {
+        audio.play();
+        playPauseBtn.textContent = 'Pause Music';
+    } else {
+        audio.pause();
+        playPauseBtn.textContent = 'Play Music';
+    }
+});
+
+document.getElementById('volumeControl').addEventListener('input', (e) => {
+    audio.volume = e.target.value;
 });

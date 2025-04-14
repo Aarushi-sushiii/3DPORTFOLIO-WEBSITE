@@ -19,6 +19,121 @@
             background: #fff;
             height: 100vh;
             overflow-y: auto;
+            cursor: none; /* Hide default cursor */
+        }
+
+        /* Mobile warning styles */
+        .mobile-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 1);
+            z-index: 2000;
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            overflow-y: auto;
+        }
+
+        .mobile-warning .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            border: 3px solid #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .mobile-warning .greeting {
+            font-size: 1.8rem;
+            color: #ff0000;
+            margin-bottom: 0.5rem;
+            font-family: 'Horizon', sans-serif;
+        }
+
+        .mobile-warning .name {
+            font-size: 2.2rem;
+            color: #ff0000;
+            margin-bottom: 1rem;
+            font-family: 'Horizon', sans-serif;
+        }
+
+        .mobile-warning .description {
+            color: #ccc;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mobile-warning .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mobile-warning .social-link {
+            color: #ff0000;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            padding: 0.3rem 0.8rem;
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .mobile-warning .social-link:hover {
+            color: #fff;
+            background: #ff0000;
+        }
+
+        .mobile-warning .pc-suggestion {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        .mobile-warning .pc-suggestion h3 {
+            color: #ff0000;
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-warning .pc-suggestion p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-warning {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            body {
+                overflow: hidden;
+            }
+        }
+
+        /* Ensure interactive elements show pointer cursor */
+        a, button, input {
+            cursor: none;
         }
 
         canvas {
@@ -30,10 +145,11 @@
 
         .content {
             position: relative;
-            z-index: 2;
+            z-index: 600;
             padding: 2rem;
             height: 100%;
             overflow: hidden;
+            background: transparent;
         }
 
         .section {
@@ -189,7 +305,7 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            z-index: 3;
+            z-index: 700;
         }
 
         .nav-dot {
@@ -222,7 +338,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 1000;
             transition: opacity 0.5s ease-out;
         }
 
@@ -547,7 +663,7 @@
             align-items: flex-end;
             gap: 2px;
             padding: 20px;
-            z-index: 1;
+            z-index: 5;
         }
 
         .visualizer-bar {
@@ -576,30 +692,35 @@
 
         .background-text {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 2rem;
+            right: 2rem;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
             font-family: 'Horizon', sans-serif;
-            font-size: 25rem;
-            color: rgba(255, 0, 0, 0.15);
+            font-size: min(15rem, 30vh);
+            color: #ff0000;
             text-shadow: 
-                0 0 20px rgba(255, 0, 0, 0.3),
-                0 0 40px rgba(255, 0, 0, 0.2),
-                0 0 60px rgba(255, 0, 0, 0.1);
-            z-index: 0;
+                0 0 20px rgba(255, 0, 0, 0.8),
+                0 0 40px rgba(255, 0, 0, 0.6),
+                0 0 60px rgba(255, 0, 0, 0.4);
+            z-index: 400;
             pointer-events: none;
             animation: pulse 4s ease-in-out infinite;
-            mix-blend-mode: multiply;
+            mix-blend-mode: normal;
+            white-space: nowrap;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            line-height: 1;
         }
 
         @keyframes pulse {
             0%, 100% {
-                opacity: 0.15;
-                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+                transform: scale(1);
             }
             50% {
-                opacity: 0.2;
-                transform: translate(-50%, -50%) scale(1.05);
+                opacity: 0.9;
+                transform: scale(1.05);
             }
         }
 
@@ -618,86 +739,682 @@
             transform: scale(1.05);
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
         }
+
+        .cursor-circle {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            transition: transform 0.1s ease-out;
+            mix-blend-mode: difference;
+        }
+
+        .intro-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background-image: url('profile.jpg'); /* Add your profile image here */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #fff;
+            padding: 0 20px;
+        }
+
+        .intro-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5); /* Dark overlay for better text contrast */
+            z-index: 1;
+        }
+
+        .intro-section h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .intro-section h1 span {
+            color: #ff0000; /* Red color for name */
+        }
+
+        .intro-section p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            color: #808080; /* Gray color for description */
+            position: relative;
+            z-index: 2;
+        }
+
+        .section#journey {
+            background: rgba(255, 255, 255, 0.98);
+            text-align: left;
+            padding: clamp(2rem, 5vh, 4rem);
+        }
+
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: clamp(2rem, 4vh, 4rem);
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .journey-section {
+            background: rgba(255, 255, 255, 0.8);
+            padding: clamp(1.5rem, 3vh, 2.5rem);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .journey-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(255, 0, 0, 0.15);
+        }
+
+        .journey-section h2 {
+            color: #ff0000;
+            font-size: clamp(1.2rem, 3vh, 1.8rem);
+            margin-bottom: clamp(1rem, 2vh, 1.5rem);
+            font-family: 'Horizon', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .journey-section h3 {
+            color: #333;
+            font-size: clamp(1rem, 2.5vh, 1.4rem);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .journey-item {
+            margin-bottom: clamp(1.5rem, 3vh, 2rem);
+            padding-left: clamp(1rem, 2vw, 1.5rem);
+            border-left: 3px solid rgba(255, 0, 0, 0.2);
+            transition: border-left-color 0.3s ease;
+        }
+
+        .journey-item:hover {
+            border-left-color: #ff0000;
+        }
+
+        .journey-role {
+            font-weight: 600;
+            color: #ff0000;
+            font-size: clamp(0.9rem, 2vh, 1.1rem);
+        }
+
+        .journey-company {
+            font-size: clamp(0.8rem, 1.8vh, 1rem);
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .journey-details {
+            font-size: clamp(0.8rem, 1.8vh, 0.95rem);
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .journey-details ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .journey-details li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.2rem;
+        }
+
+        .journey-details li::before {
+            content: '•';
+            color: #ff0000;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .skill-category {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 1rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .skill-category h4 {
+            color: #ff0000;
+            margin-bottom: 0.5rem;
+            font-size: clamp(0.9rem, 2vh, 1.1rem);
+        }
+
+        .skill-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .skill-list li {
+            font-size: clamp(0.8rem, 1.8vh, 0.95rem);
+            margin-bottom: 0.3rem;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .journey-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .journey-section {
+                padding: 1.5rem;
+            }
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .summary {
+            font-size: clamp(1.1rem, 2.5vh, 1.4rem);
+            color: #ff0000;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .about-subtitle {
+            color: #ff0000;
+            font-size: clamp(1.3rem, 3vh, 1.8rem);
+            margin: 2rem 0 1rem;
+            font-family: 'Horizon', sans-serif;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .about-subtitle::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 1rem;
+            height: 2px;
+            background: #ff0000;
+            transform: translateY(-50%);
+        }
+
+        .experience-text {
+            font-size: clamp(0.9rem, 2vh, 1.1rem);
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .experience-text strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                padding: 1rem 0;
+            }
+            
+            .summary {
+                font-size: 1rem;
+            }
+            
+            .experience-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        .music-player {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 320px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            z-index: 800;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        .music-player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+        }
+
+        .music-player-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .music-player-title {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .music-player-artist {
+            color: #666;
+            font-size: 0.875rem;
+        }
+
+        .music-player-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .music-player-controls {
+            padding: 1rem 1.5rem;
+        }
+
+        .music-player-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .music-player-bar {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 0, 0, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .music-player-progress-bar {
+            height: 100%;
+            width: 50%;
+            background: #ff0000;
+            border-radius: 2px;
+        }
+
+        .music-player-time {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .music-player-icon {
+            width: 24px;
+            height: 24px;
+            color: #666;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .music-player-icon.active {
+            color: #ff0000;
+        }
+
+        .music-player-icon.secondary {
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .music-player-icon.secondary.active {
+            color: #ff0000;
+        }
+
+        .music-player-action-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-player-action-btn:hover .music-player-icon {
+            color: #ff0000;
+        }
+
+        .bento-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 800;
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .bento-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 2px solid #ff0000;
+            background: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .bento-button:hover {
+            transform: scale(1.1);
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .bento-button::before {
+            font-size: 20px;
+        }
+
+        #playPauseBtn::before {
+            content: '⏸️';
+        }
+
+        #playPauseBtn.paused::before {
+            content: '▶️';
+        }
+
+        #darkModeToggle::before {
+            content: '🌙';
+        }
+
+        #darkModeToggle.active::before {
+            content: '☀️';
+        }
+
+        #muteBtn::before {
+            content: '🔊';
+        }
+
+        #muteBtn.muted::before {
+            content: '🔇';
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background: #111;
+            color: #fff;
+        }
+
+        body.dark-mode .section {
+            background: rgba(17, 17, 17, 0.95);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        body.dark-mode #home {
+            background: rgba(17, 17, 17, 0.95);
+        }
+
+        body.dark-mode #home .welcome-text {
+            color: #ff0000;
+        }
+
+        body.dark-mode #home .name-text {
+            color: #fff;
+        }
+
+        body.dark-mode #home .description-text {
+            color: #ccc;
+        }
+
+        body.dark-mode #home .profile-image {
+            border-color: #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        body.dark-mode #home .profile-image:hover {
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+        }
+
+        body.dark-mode h1,
+        body.dark-mode .section-title {
+            color: #ff0000;
+        }
+
+        body.dark-mode p {
+            color: #ccc;
+        }
+
+        body.dark-mode .music-player {
+            background: rgba(17, 17, 17, 0.95);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        body.dark-mode .music-player-title {
+            color: #fff;
+        }
+
+        body.dark-mode .music-player-artist {
+            color: #ccc;
+        }
+
+        body.dark-mode .music-player-icon {
+            color: #ccc;
+        }
+
+        body.dark-mode .bento-box {
+            background: rgba(17, 17, 17, 0.2);
+        }
+
+        body.dark-mode .bento-button {
+            background: rgba(17, 17, 17, 0.9);
+            color: #fff;
+        }
+
+        body.dark-mode .journey-item {
+            border-left-color: rgba(255, 0, 0, 0.4);
+        }
+
+        body.dark-mode .journey-details {
+            color: #ccc;
+        }
+
+        body.dark-mode .skill-category {
+            background: rgba(17, 17, 17, 0.5);
+        }
+
+        body.dark-mode .skill-category:hover {
+            background: rgba(17, 17, 17, 0.8);
+        }
+
+        body.dark-mode .skill-list li {
+            color: #ccc;
+        }
+
+        body.dark-mode .social-link {
+            color: #ff0000;
+        }
+
+        body.dark-mode .social-link:hover {
+            color: #ff3333;
+        }
+
+        .music-player-icon-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease;
+        }
+
+        .music-player-icon-link:hover {
+            color: #ff0000;
+        }
     </style>
 </head>
 <body>
-    <div class="background-text">FUNGI</div>
+    <div class="mobile-warning">
+        <img src="image.png" alt="Aman Gangwar" class="profile-image">
+        <h2 class="greeting">Hi there, my name is</h2>
+        <h1 class="name">AMAN GANGWAR</h1>
+        <p class="description">Innovative Computer Science student with a strong foundation in full-stack development and UI/UX design.</p>
+        <div class="social-links">
+            <a href="https://linkedin.com/in/aman-gangwar-300822292" class="social-link" target="_blank">LinkedIn</a>
+            <a href="https://instagram.com/theamangangwar" class="social-link" target="_blank">Instagram</a>
+            <a href="#" class="social-link" target="_blank">GitHub</a>
+            <a href="#" class="social-link" target="_blank">Reddit</a>
+            <a href="#" class="social-link" target="_blank">X.com</a>
+            <a href="#" class="social-link" target="_blank">Behance</a>
+            <a href="#" class="social-link" target="_blank">Telegram</a>
+        </div>
+        <div class="pc-suggestion">
+            <h3>For the Best Experience</h3>
+            <p>This website is optimized for desktop viewing. Please visit on a PC or laptop to explore the full 3D experience!</p>
+        </div>
+    </div>
+    <div class="background-text">真菌</div>
     <div class="loading-screen">
         <div class="loader">
-            <div class="box box0">
-                <div></div>
-            </div>
-            <div class="box box1">
-                <div></div>
-            </div>
-            <div class="box box2">
-                <div></div>
-            </div>
-            <div class="box box3">
-                <div></div>
-            </div>
-            <div class="box box4">
-                <div></div>
-            </div>
-            <div class="box box5">
-                <div></div>
-            </div>
-            <div class="box box6">
-                <div></div>
-            </div>
-            <div class="box box7">
-                <div></div>
-            </div>
-            <div class="ground">
-                <div></div>
-            </div>
+            <div class="box box0"><div></div></div>
+            <div class="box box1"><div></div></div>
+            <div class="box box2"><div></div></div>
+            <div class="box box3"><div></div></div>
+            <div class="box box4"><div></div></div>
+            <div class="box box5"><div></div></div>
+            <div class="box box6"><div></div></div>
+            <div class="box box7"><div></div></div>
+            <div class="ground"><div></div></div>
         </div>
     </div>
 
-    <div class="cursor"></div>
-    <div class="cursor-trail"></div>
-
     <div class="scene-container" id="scene-container"></div>
-    <div class="visualizer-container">
-        <div class="visualizer-reflection"></div>
-    </div>
-
-    <audio id="background-music" loop crossorigin="anonymous">
-        <source src="Space Cadet-yt.savetube.me.mp3" type="audio/mpeg">
-    </audio>
-
-    <div class="music-controls">
-        <button id="playPauseBtn">Play Music</button>
-        <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5">
-    </div>
-
+    <div class="cursor-circle"></div>
     <div class="content">
-        <section class="section" id="intro">
-            <div class="section-visualizer"></div>
-            <span class="section-title">Welcome</span>
+        <section id="home" class="section">
+            <h2 class="welcome-text">WELCOME</h2>
             <img src="image.png" alt="Aman Gangwar" class="profile-image">
-            <h1>Hi, I'm Aman Gangwar</h1>
-            <p>Innovative Computer Science student with a strong foundation in full-stack development and UI/UX design. Passionate about creating user-centric digital solutions and leading collaborative tech initiatives.</p>
+            <div class="text-content">
+                <h1 class="name-text">HI, I'M<br>AMAN GANGWAR</h1>
+                <p class="description-text">Innovative Computer Science student with a strong foundation in full-stack development and UI/UX design. Passionate about creating user-centric digital solutions and leading collaborative tech initiatives.</p>
+            </div>
             <div class="social-links">
                 <a href="https://linkedin.com/in/aman-gangwar-300822292" class="social-link" target="_blank">LinkedIn</a>
                 <a href="https://instagram.com/theamangangwar" class="social-link" target="_blank">Instagram</a>
+                <a href="#" class="social-link" target="_blank">GitHub</a>
+                <a href="#" class="social-link" target="_blank">Reddit</a>
+                <a href="#" class="social-link" target="_blank">X.com</a>
+                <a href="#" class="social-link" target="_blank">Behance</a>
+                <a href="#" class="social-link" target="_blank">Telegram</a>
             </div>
         </section>
 
-        <section class="section" id="about">
+        <section id="about" class="section">
             <div class="section-visualizer"></div>
             <span class="section-title">About Me</span>
             <h1>My Journey</h1>
-            <p>Currently pursuing B.Tech in Computer Science at Bennett University, I combine technical expertise with creative problem-solving to build innovative digital solutions.</p>
-            <div class="experience-item">
-                <h2 class="experience-title">Design Intern</h2>
-                <p class="experience-company">nexCRAFT</p>
-                <p class="experience-description">Collaborated on UI/UX design projects, enhancing user engagement and contributing to the development of design prototypes and user interfaces.</p>
-            </div>
-            <div class="experience-item">
-                <h2 class="experience-title">President</h2>
-                <p class="experience-company">Fullstack Club, Bennett University</p>
-                <p class="experience-description">Led a team of developers and designers to organize tech events and workshops, fostering a community of innovation and continuous learning among students.</p>
+            <div class="about-content">
+                <div class="journey-item">
+                    <div class="journey-role">President – Fullstack Club, Bennett University</div>
+                    <div class="journey-details">
+                        <ul>
+                            <li>Led tech initiatives, workshops & hackathons</li>
+                            <li>Mentored devs in full-stack and modern web tools</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="journey-item">
+                    <div class="journey-role">Design Head – ACM-BU</div>
+                    <div class="journey-details">
+                        <ul>
+                            <li>Oversaw branding, UI/UX, and creative direction</li>
+                            <li>Managed design team for events and campaigns</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="journey-item">
+                    <div class="journey-role">Design Head – Alexis (BU Chapter)</div>
+                    <div class="journey-details">
+                        <ul>
+                            <li>Created visual assets for social and promo campaigns</li>
+                            <li>Handled end-to-end design execution</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="journey-item">
+                    <div class="journey-role">Design Intern – nexCRAFT</div>
+                    <div class="journey-details">
+                        <ul>
+                            <li>Designed UI components and prototypes</li>
+                            <li>Built scalable design systems for client projects</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="journey-item">
+                    <div class="journey-role">Operations Intern – Dogowala (Bennett Incubated Startup)</div>
+                    <div class="journey-details">
+                        <ul>
+                            <li>Managed logistics and backend operations</li>
+                            <li>Assisted in streamlining product workflows</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="journey-item">
+                    <div class="journey-role">Cadet, Officers Training Academy (2023–24)</div>
+                    <div class="journey-details">
+                        <ul>
+                            <li>Completed military leadership & discipline training</li>
+                            <li>Team-based strategic simulations and drills</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="journey-item">
+                    <div class="journey-role">NCC (Army Wing)</div>
+                    <div class="journey-details">
+                        <ul>
+                            <li>Earned A & B Certificates</li>
+                            <li>Participated in camps, drills, and public service</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -762,25 +1479,38 @@
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3>Frameworks & Libraries</h3>
+                    <h3>Frameworks/Tools</h3>
                     <ul class="skill-list">
                         <li>React</li>
                         <li>Node.js</li>
+                        <li>Express</li>
+                        <li>MongoDB</li>
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3>Design Tools</h3>
+                    <h3>Design</h3>
                     <ul class="skill-list">
                         <li>Figma</li>
                         <li>Adobe XD</li>
+                        <li>Illustrator</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Others</h3>
+                    <ul class="skill-list">
+                        <li>Git</li>
+                        <li>REST APIs</li>
+                        <li>Blender</li>
+                        <li>Operations Management</li>
                     </ul>
                 </div>
                 <div class="skill-category">
                     <h3>Soft Skills</h3>
                     <ul class="skill-list">
                         <li>Leadership</li>
-                        <li>Team Collaboration</li>
-                        <li>Project Management</li>
+                        <li>Strategic Planning</li>
+                        <li>Visual Design</li>
+                        <li>Team Coordination</li>
                     </ul>
                 </div>
             </div>
@@ -796,74 +1526,251 @@
                 <a href="https://instagram.com/theamangangwar" class="social-link" target="_blank">Instagram</a>
             </div>
         </section>
+
+        <div class="music-player">
+            <div class="music-player-header">
+                <div class="music-player-info">
+                    <svg class="music-player-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18V5l12-2v13"></path>
+                        <circle cx="6" cy="18" r="3"></circle>
+                        <circle cx="18" cy="16" r="3"></circle>
+                    </svg>
+                    <div>
+                        <h3 class="music-player-title">Space Cadet</h3>
+                        <p class="music-player-artist">Metro Boomin ft. Gunna</p>
+                    </div>
+                </div>
+                <div class="music-player-actions">
+                    <svg class="music-player-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                    </svg>
+                    <svg class="music-player-icon secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+            </div>
+            <div class="music-player-controls">
+                <div class="music-player-progress">
+                    <a href="https://open.spotify.com/user/31hetmj7rd3bhy7pir6g7parqy3i?si=55a65cde360446bd" target="_blank" class="music-player-icon-link">
+                        <svg class="music-player-icon" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3"/>
+                        </svg>
+                    </a>
+                    <div class="music-player-bar">
+                        <div class="music-player-progress-bar"></div>
+                    </div>
+                    <span>50%</span>
+                </div>
+                <div class="music-player-time">
+                    <span>00:03</span>
+                    <span>3:35</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bento-box">
+            <button id="darkModeToggle" class="bento-button"></button>
+            <button id="playPauseBtn" class="bento-button"></button>
+            <button id="muteBtn" class="bento-button"></button>
+        </div>
     </div>
 
     <div class="nav-dots">
-        <div class="nav-dot" data-section="intro"></div>
+        <div class="nav-dot" data-section="home"></div>
         <div class="nav-dot" data-section="about"></div>
         <div class="nav-dot" data-section="designs"></div>
         <div class="nav-dot" data-section="skills"></div>
         <div class="nav-dot" data-section="contact"></div>
     </div>
 
+    <audio id="background-music" loop autoplay>
+        <source src="Space Cadet-yt.savetube.me.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
     <script type="module" src="main.js"></script>
     <script>
-        // Cursor trail animation
+        // Dark mode functionality
+        function initializeDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const body = document.body;
+            const sceneContainer = document.getElementById('scene-container');
+            
+            // Check for saved dark mode preference
+            const darkMode = localStorage.getItem('darkMode');
+            
+            // Apply saved preference
+            if (darkMode === 'enabled') {
+                body.classList.add('dark-mode');
+                darkModeToggle.classList.add('active');
+                // Dispatch custom event for dark mode
+                window.dispatchEvent(new CustomEvent('darkModeChange', { detail: { isDark: true } }));
+            }
+            
+            // Toggle dark mode
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                darkModeToggle.classList.toggle('active');
+                
+                const isDark = body.classList.contains('dark-mode');
+                // Dispatch custom event for dark mode change
+                window.dispatchEvent(new CustomEvent('darkModeChange', { detail: { isDark } }));
+                
+                // Save preference
+                if (isDark) {
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    localStorage.setItem('darkMode', null);
+                }
+            });
+        }
+
+        // Initialize dark mode when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
-            const cursor = document.querySelector('.cursor');
-            const cursorTrail = document.querySelector('.cursor-trail');
-            let mouseX = 0;
-            let mouseY = 0;
-            let trailX = 0;
-            let trailY = 0;
-            let isAnimating = false;
+            initializeDarkMode();
+            initializeMusicControls();
+        });
 
-            function animate() {
-                if (!isAnimating) return;
-
-                const diffX = mouseX - trailX;
-                const diffY = mouseY - trailY;
-
-                trailX += diffX * 0.1;
-                trailY += diffY * 0.1;
-
-                cursorTrail.style.transform = `translate(${trailX}px, ${trailY}px)`;
-
-                requestAnimationFrame(animate);
+        // Optimized cursor trail effect
+        class CursorTrail {
+            constructor() {
+                this.circles = [];
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.positions = [];
+                this.maxCircles = 10;
+                this.init();
             }
 
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-
-                cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-
-                if (!isAnimating) {
-                    isAnimating = true;
-                    animate();
+            init() {
+                // Create circles
+                for (let i = 0; i < this.maxCircles; i++) {
+                    const circle = document.createElement('div');
+                    circle.className = 'cursor-circle';
+                    circle.style.opacity = 1 - (i * 0.1);
+                    circle.style.transform = `translate(-50%, -50%) scale(${1 - (i * 0.1)})`;
+                    document.body.appendChild(circle);
+                    this.circles.push(circle);
+                    this.positions.push({ x: 0, y: 0 });
                 }
-            });
 
-            // Auto-play music when loading completes
+                // Mouse move event
+                document.addEventListener('mousemove', (e) => {
+                    this.mouseX = e.clientX;
+                    this.mouseY = e.clientY;
+                });
+
+                // Start animation
+                this.animate();
+            }
+
+            animate() {
+                // Update positions
+                this.positions.unshift({ x: this.mouseX, y: this.mouseY });
+                if (this.positions.length > this.maxCircles) {
+                    this.positions.pop();
+                }
+
+                // Update circles
+                this.circles.forEach((circle, index) => {
+                    const pos = this.positions[index] || this.positions[this.positions.length - 1];
+                    circle.style.left = pos.x + 'px';
+                    circle.style.top = pos.y + 'px';
+                });
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Initialize cursor trail
+        new CursorTrail();
+
+        // Music controls
+        function initializeMusicControls() {
             const audio = document.getElementById('background-music');
             const playPauseBtn = document.getElementById('playPauseBtn');
-            audio.play();
+            const muteBtn = document.getElementById('muteBtn');
+            const progressBar = document.querySelector('.music-player-progress-bar');
+            const currentTime = document.querySelector('.music-player-time span:first-child');
+            const duration = document.querySelector('.music-player-time span:last-child');
+            const likeBtn = document.querySelector('.music-player-actions .music-player-icon:first-child');
+            const starBtn = document.querySelector('.music-player-actions .music-player-icon:last-child');
 
-            // Music controls
-            playPauseBtn.addEventListener('click', () => {
-                if (audio.paused) {
-                    audio.play();
-                    playPauseBtn.textContent = 'Pause Music';
-                } else {
-                    audio.pause();
-                    playPauseBtn.textContent = 'Play Music';
+            if (!audio || !playPauseBtn || !muteBtn || !progressBar || !currentTime || !duration || !likeBtn || !starBtn) {
+                console.warn('Some music control elements are missing');
+                return;
+            }
+
+            // Set default volume to 20%
+            audio.volume = 0.2;
+
+            // Like button functionality
+            likeBtn.addEventListener('click', () => {
+                likeBtn.classList.toggle('active');
+            });
+
+            // Star button functionality
+            starBtn.addEventListener('click', () => {
+                starBtn.classList.toggle('active');
+            });
+
+            // Update progress bar and time
+            audio.addEventListener('timeupdate', () => {
+                if (audio.duration) {
+                    const progress = (audio.currentTime / audio.duration) * 100;
+                    progressBar.style.width = `${progress}%`;
+                    currentTime.textContent = formatTime(audio.currentTime);
+                    duration.textContent = formatTime(audio.duration);
                 }
             });
 
-            document.getElementById('volumeControl').addEventListener('input', (e) => {
-                audio.volume = e.target.value;
+            // Format time helper
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = Math.floor(seconds % 60);
+                return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            }
+
+            // Play/pause button
+            playPauseBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play().catch(error => {
+                        console.error('Error playing audio:', error);
+                    });
+                    playPauseBtn.classList.remove('paused');
+                } else {
+                    audio.pause();
+                    playPauseBtn.classList.add('paused');
+                }
             });
-        });
+
+            // Mute button
+            muteBtn.addEventListener('click', () => {
+                if (audio.muted) {
+                    audio.muted = false;
+                    muteBtn.classList.remove('muted');
+                } else {
+                    audio.muted = true;
+                    muteBtn.classList.add('muted');
+                }
+            });
+
+            // Click on progress bar to seek
+            document.querySelector('.music-player-bar').addEventListener('click', (e) => {
+                const bar = e.currentTarget;
+                const clickPosition = e.offsetX / bar.offsetWidth;
+                audio.currentTime = clickPosition * audio.duration;
+            });
+
+            // Handle autoplay
+            document.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play().catch(error => {
+                        console.error('Error playing audio:', error);
+                    });
+                }
+            }, { once: true });
+        }
     </script>
 </body>
 </html>

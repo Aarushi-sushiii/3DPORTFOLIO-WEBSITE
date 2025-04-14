@@ -5,7 +5,13 @@ import AudioMotionAnalyzer from 'audiomotion-analyzer';
 
 // Scene setup
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000);
+scene.background = new THREE.Color(0xffffff);
+
+// Listen for dark mode changes
+window.addEventListener('darkModeChange', (event) => {
+    const isDark = event.detail.isDark;
+    scene.background = new THREE.Color(isDark ? 0x000000 : 0xffffff);
+});
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -35,7 +41,7 @@ scene.add(pointLight);
 const geometry = new THREE.TorusKnotGeometry(2, 0.6, 200, 32);
 const material = new THREE.MeshPhongMaterial({
     color: 0xff0000,
-    shininess: 50,
+    shininess: 100,
     specular: 0xff0000,
     emissive: 0x330000
 });
