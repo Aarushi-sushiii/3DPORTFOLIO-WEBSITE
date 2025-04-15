@@ -33,7 +33,7 @@ directionalLight.position.set(5, 5, 5);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
-const pointLight = new THREE.PointLight(0xff0000, 0.5, 100);
+const pointLight = new THREE.PointLight(0xffffff, 0.5, 100);
 pointLight.position.set(2, 3, 4);
 scene.add(pointLight);
 
@@ -41,7 +41,7 @@ scene.add(pointLight);
 const geometry = new THREE.TorusKnotGeometry(2, 0.6, 200, 32);
 const material = new THREE.MeshPhongMaterial({
     color: 0xff0000,
-    shininess: 100,
+    shininess: 70,
     specular: 0xff0000,
     emissive: 0x330000
 });

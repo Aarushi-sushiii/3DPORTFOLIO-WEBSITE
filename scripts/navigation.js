@@ -35,28 +35,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add click event listeners to navigation dots
     navDots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
-            if (!isScrolling) {
-                isScrolling = true;
-                currentSection = index;
-                updateNavDots(index);
-                
-                sections[index].scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-
-                setTimeout(() => {
-                    isScrolling = false;
-                }, 1000);
-            }
+            if (isScrolling) return;
+            isScrolling = true;
+            
+            // Get the target section
+            const targetSection = sections[index];
+            if (!targetSection) return;
+            
+            // Calculate the target position
+            const targetPosition = targetSection.offsetTop - 20; // 20px offset for better positioning
+            
+            // Smooth scroll to the target section
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            
+            // Update active section and dot
+            currentSection = index;
+            updateNavDots(currentSection);
+            
+            // Reset scrolling flag after animation completes
+            setTimeout(() => {
+                isScrolling = false;
+            }, 1000); // Adjust timing based on scroll duration
         });
     });
 
-    // Add scroll event listener
+    // Update active section on scroll
     window.addEventListener('scroll', () => {
-        if (!isScrolling) {
-            updateActiveSection();
-        }
+        if (isScrolling) return;
+        updateActiveSection();
     });
 
     // Initialize first section as active
