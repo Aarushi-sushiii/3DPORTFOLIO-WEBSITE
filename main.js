@@ -60,6 +60,7 @@ controls.autoRotateSpeed = 0.1;
 
 // Audio Visualization Setup
 let audioContext, audioAnalyser, audioElement, visualizer, audioSource;
+let isVisualizerInitialized = false;
 
 function initAudio() {
     try {
@@ -90,39 +91,44 @@ function initAudio() {
         if (!container) {
             container = document.createElement('div');
             container.className = 'visualizer-container';
-            document.body.appendChild(container);
+            document.body.insertBefore(container, document.body.firstChild);
         }
         
-        // Clean up existing visualizer if it exists
-        if (visualizer) {
-            visualizer.destroy();
+        // Only initialize visualizer if it hasn't been initialized yet
+        if (!isVisualizerInitialized) {
+            // Clean up existing visualizer if it exists
+            if (visualizer) {
+                visualizer.destroy();
+            }
+            
+            // Initialize AudioMotion Analyzer
+            visualizer = new AudioMotionAnalyzer(container, {
+                source: audioElement,
+                height: 150,
+                width: window.innerWidth,
+                mode: 3,
+                fillAlpha: 0.7,
+                gradient: 'rainbow',
+                lineWidth: 2,
+                showBgColor: false,
+                showScaleX: false,
+                showScaleY: false,
+                maxFreq: 16000,
+                minFreq: 30,
+                smoothing: 0.7,
+                speed: 1.5,
+                splitMode: false,
+                start: true,
+                useCanvas: true,
+                gradientColors: [
+                    { pos: 0, color: '#330000' },
+                    { pos: 0.5, color: '#ff0000' },
+                    { pos: 1, color: '#ff3333' }
+                ]
+            });
+            
+            isVisualizerInitialized = true;
         }
-        
-        // Initialize AudioMotion Analyzer
-        visualizer = new AudioMotionAnalyzer(container, {
-            source: audioElement,
-            height: 150,
-            width: window.innerWidth,
-            mode: 3,
-            fillAlpha: 0.7,
-            gradient: 'rainbow',
-            lineWidth: 2,
-            showBgColor: false,
-            showScaleX: false,
-            showScaleY: false,
-            maxFreq: 16000,
-            minFreq: 30,
-            smoothing: 0.7,
-            speed: 1.5,
-            splitMode: false,
-            start: true,
-            useCanvas: true,
-            gradientColors: [
-                { pos: 0, color: '#330000' },
-                { pos: 0.5, color: '#ff0000' },
-                { pos: 1, color: '#ff3333' }
-            ]
-        });
         
         return true;
     } catch (error) {
