@@ -1,82 +1,136 @@
-import * as THREE from 'three';
+import AudioMotionAnalyzer from 'audiomotion-analyzer';
 
 export class AudioVisualizer {
-    constructor(scene) {
-        this.scene = scene;
+    constructor() {
         this.audioContext = null;
-        this.analyser = null;
-        this.dataArray = null;
+        this.audioAnalyser = null;
         this.audioElement = null;
-        this.isPlaying = false;
+        this.visualizer = null;
         this.audioSource = null;
-        this.visualizationMesh = null;
+        this.isVisualizerInitialized = false;
     }
 
     init() {
-        // Create audio context
-        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        this.analyser = this.audioContext.createAnalyser();
-        this.analyser.fftSize = 256;
-        const bufferLength = this.analyser.frequencyBinCount;
-        this.dataArray = new Uint8Array(bufferLength);
-
-        // Create visualization mesh
-        const geometry = new THREE.BufferGeometry();
-        const vertices = new Float32Array(bufferLength * 3);
-        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-        const material = new THREE.LineBasicMaterial({ color: 0xffffff });
-        this.visualizationMesh = new THREE.Line(geometry, material);
-        this.scene.add(this.visualizationMesh);
+        try {
+            // Clean up existing audio context if it exists
+            if (this.audioContext) {
+                this.audioContext.close();
+            }
+            
+            this.audioElement = document.getElementById('background-music');
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Disconnect any existing connections
+            if (this.audioSource) {
+                this.audioSource.disconnect();
+            }
+            
+            // Create new audio source
+            this.audioSource = this.audioContext.createMediaElementSource(this.audioElement);
+            this.audioAnalyser = this.audioContext.createAnalyser();
+            this.audioAnalyser.fftSize = 256;
+            
+            // Connect the audio chain
+            this.audioSource.connect(this.audioAnalyser);
+            this.audioAnalyser.connect(this.audioContext.destination);
+            
+            // Create or update visualizer container
+            let container = document.querySelector('.visualizer-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.className = 'visualizer-container';
+                document.body.insertBefore(container, document.body.firstChild);
+            }
+            
+            // Only initialize visualizer if it hasn't been initialized yet
+            if (!this.isVisualizerInitialized) {
+                // Clean up existing visualizer if it exists
+                if (this.visualizer) {
+                    this.visualizer.destroy();
+                }
+                
+                // Initialize AudioMotion Analyzer
+                this.visualizer = new AudioMotionAnalyzer(container, {
+                    source: this.audioElement,
+                    height: 150,
+                    width: window.innerWidth,
+                    mode: 3,
+                    fillAlpha: 0.7,
+                    gradient: 'rainbow',
+                    lineWidth: 2,
+                    showBgColor: false,
+                    showScaleX: false,
+                    showScaleY: false,
+                    maxFreq: 16000,
+                    minFreq: 30,
+                    smoothing: 0.7,
+                    speed: 1.5,
+                    splitMode: false,
+                    start: true,
+                    useCanvas: true,
+                    gradientColors: [
+                        { pos: 0, color: '#330000' },
+                        { pos: 0.5, color: '#ff0000' },
+                        { pos: 1, color: '#ff3333' }
+                    ]
+                });
+                
+                this.isVisualizerInitialized = true;
+            }
+            
+            return true;
+        } catch (error) {
+            console.error('Audio initialization error:', error);
+            return false;
+        }
     }
 
-    setupAudioElement(audioElement) {
-        this.audioElement = audioElement;
-        this.audioSource = this.audioContext.createMediaElementSource(audioElement);
-        this.audioSource.connect(this.analyser);
-        this.analyser.connect(this.audioContext.destination);
-    }
-
-    togglePlay() {
-        if (this.audioContext.state === 'suspended') {
-            this.audioContext.resume();
-        }
+    setupMusicControls() {
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const volumeControl = document.getElementById('volumeControl');
         
-        if (this.isPlaying) {
-            this.audioElement.pause();
-        } else {
-            this.audioElement.play();
-        }
-        this.isPlaying = !this.isPlaying;
-    }
-
-    update() {
-        if (!this.analyser || !this.visualizationMesh) return;
-
-        this.analyser.getByteFrequencyData(this.dataArray);
-        const positions = this.visualizationMesh.geometry.attributes.position.array;
+        playPauseBtn.addEventListener('click', async () => {
+            try {
+                if (this.audioContext?.state === 'suspended') {
+                    await this.audioContext.resume();
+                }
+                
+                if (!this.audioContext) {
+                    const success = this.init();
+                    if (!success) return;
+                }
+                
+                if (this.audioElement.paused) {
+                    await this.audioElement.play();
+                    playPauseBtn.textContent = 'Pause Music';
+                } else {
+                    this.audioElement.pause();
+                    playPauseBtn.textContent = 'Play Music';
+                }
+            } catch (error) {
+                console.error('Playback error:', error);
+            }
+        });
         
-        for (let i = 0; i < this.dataArray.length; i++) {
-            const value = this.dataArray[i] / 128.0;
-            positions[i * 3] = (i - this.dataArray.length / 2) * 0.1;
-            positions[i * 3 + 1] = value;
-            positions[i * 3 + 2] = 0;
-        }
-        
-        this.visualizationMesh.geometry.attributes.position.needsUpdate = true;
+        volumeControl.addEventListener('input', (e) => {
+            if (this.audioElement) {
+                this.audioElement.volume = e.target.value;
+            }
+        });
     }
 
     cleanup() {
         if (this.audioSource) {
             this.audioSource.disconnect();
         }
-        if (this.analyser) {
-            this.analyser.disconnect();
+        if (this.audioAnalyser) {
+            this.audioAnalyser.disconnect();
         }
         if (this.audioContext) {
             this.audioContext.close();
         }
-        if (this.visualizationMesh) {
-            this.scene.remove(this.visualizationMesh);
+        if (this.visualizer) {
+            this.visualizer.destroy();
         }
     }
 } 

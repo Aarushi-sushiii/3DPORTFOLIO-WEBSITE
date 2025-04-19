@@ -1,77 +1,106 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-export function createScene() {
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff);
+export class SceneManager {
+    constructor() {
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.controls = null;
+        this.torusKnot = null;
+    }
 
-    // Listen for dark mode changes
-    window.addEventListener('darkModeChange', (event) => {
-        const isDark = event.detail.isDark;
-        scene.background = new THREE.Color(isDark ? 0x000000 : 0xffffff);
-    });
+    init() {
+        // Scene setup
+        this.scene.background = new THREE.Color(0xffffff);
+        
+        // Camera setup
+        this.camera.position.set(0, 2, 5);
+        
+        // Renderer setup
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.shadowMap.enabled = true;
+        document.body.appendChild(this.renderer.domElement);
+        
+        // Lighting
+        this.setupLights();
+        
+        // Create 3D object
+        this.createTorusKnot();
+        
+        // Controls
+        this.setupControls();
+        
+        // Handle window resize
+        window.addEventListener('resize', () => this.onWindowResize());
+    }
 
-    return scene;
-}
+    setupLights() {
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        this.scene.add(ambientLight);
 
-export function createCamera() {
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 2, 5);
-    return camera;
-}
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 5, 5);
+        directionalLight.castShadow = true;
+        this.scene.add(directionalLight);
 
-export function createRenderer() {
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.shadowMap.enabled = true;
-    document.body.appendChild(renderer.domElement);
-    return renderer;
-}
+        const pointLight = new THREE.PointLight(0xffffff, 0.5, 100);
+        pointLight.position.set(2, 3, 4);
+        this.scene.add(pointLight);
+    }
 
-export function setupLights(scene) {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
+    createTorusKnot() {
+        const geometry = new THREE.TorusKnotGeometry(2, 0.6, 200, 32);
+        const material = new THREE.MeshPhongMaterial({
+            color: 0xff0000,
+            shininess: 70,
+            specular: 0xff0000,
+            emissive: 0x330000
+        });
+        this.torusKnot = new THREE.Mesh(geometry, material);
+        this.scene.add(this.torusKnot);
+    }
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(5, 5, 5);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
+    setupControls() {
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.05;
+        this.controls.maxPolarAngle = Math.PI / 2;
+        this.controls.minDistance = 3;
+        this.controls.maxDistance = 10;
+        this.controls.autoRotate = true;
+        this.controls.autoRotateSpeed = 0.1;
+    }
 
-    const pointLight = new THREE.PointLight(0xffffff, 0.5, 100);
-    pointLight.position.set(2, 3, 4);
-    scene.add(pointLight);
-}
+    onWindowResize() {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
 
-export function createTorusKnot() {
-    const geometry = new THREE.TorusKnotGeometry(2, 0.6, 200, 32);
-    const material = new THREE.MeshPhongMaterial({
-        color: 0xff0000,
-        shininess: 70,
-        specular: 0xff0000,
-        emissive: 0x330000
-    });
-    return new THREE.Mesh(geometry, material);
-}
+    update() {
+        if (this.torusKnot) {
+            this.torusKnot.rotation.x += 0.001;
+            this.torusKnot.rotation.y += 0.002;
+            this.torusKnot.rotation.z += 0.001;
+        }
+        
+        if (this.controls) {
+            this.controls.update();
+        }
+        
+        this.renderer.render(this.scene, this.camera);
+    }
 
-export function createControls(camera, renderer) {
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.maxPolarAngle = Math.PI / 2;
-    controls.minDistance = 3;
-    controls.maxDistance = 10;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.1;
-    return controls;
-}
-
-export function setupResizeHandler(camera, renderer) {
-    const onWindowResize = () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-    window.addEventListener('resize', onWindowResize, false);
-    return onWindowResize;
+    cleanup() {
+        window.removeEventListener('resize', () => this.onWindowResize());
+        if (this.controls) {
+            this.controls.dispose();
+        }
+        if (this.renderer) {
+            this.renderer.dispose();
+        }
+    }
 } 
