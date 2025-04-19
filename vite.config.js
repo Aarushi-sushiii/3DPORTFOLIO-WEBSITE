@@ -12,6 +12,7 @@ export default defineConfig({
   publicDir: 'public',
   root: './',
   build: {
-    watch: true
+    watch: true,
+    chunkSizeWarningLimit: 1000
   }
 }); 
