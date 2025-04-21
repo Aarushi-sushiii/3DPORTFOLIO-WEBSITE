@@ -10,10 +10,10 @@ export class Objects {
         // Create 3D Object
         const geometry = new THREE.TorusKnotGeometry(2, 0.6, 200, 32);
         const material = new THREE.MeshPhongMaterial({
-            color: 0xff0000,
+            color: 0x0000ff,
             shininess: 70,
-            specular: 0xff0000,
-            emissive: 0x330000
+            specular: 0x0000ff,
+            emissive: 0x000033
         });
         this.torusKnot = new THREE.Mesh(geometry, material);
         this.scene.add(this.torusKnot);
